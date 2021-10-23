@@ -8,9 +8,8 @@ from django.contrib.auth.decorators import login_required
 def capture(request):
     if request.method == 'POST':
         print(request.POST)
-        if request.POST.get('username') and request.POST.get('photo_captured'):
+        if request.POST.get('photo_captured'):
             photo=Photo()
-            photo.username= request.POST.get('username')
             photo.photo_edited= request.POST.get('photo_edited')
             photo.photo_captured= request.POST.get('photo_captured')
             photo.save()
@@ -21,23 +20,18 @@ def capture(request):
         context = {'frames': frames,}
         return render(request,'capture.html', context)
 
-
 def show(request, id):
     photo = Photo.objects.get(pk=id)
     context = {'photo': photo,}
     return render(request,'show.html', context)
 
-
-@login_required
 def editor(request, id):
     if request.method == 'POST':
         print(request.POST)
         print(id)
-        # if request.POST.get('username') and request.POST.get('photo_edited'):
         if request.POST.get('photo_edited'):
             photo = Photo.objects.get(pk=id)
             emojis = Emoji.objects.all()
-            # photo.username= request.POST.get('username')
             photo.photo_edited= request.POST.get('photo_edited')
             photo.save()
             context = {'photo': photo, 'emojis': emojis, }
