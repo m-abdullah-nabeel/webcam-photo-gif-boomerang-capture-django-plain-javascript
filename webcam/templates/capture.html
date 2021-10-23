@@ -37,7 +37,6 @@ let click_button = document.querySelector("#click-photo");
 let canvas = document.querySelector("#canvas");
 //video
 let start_button = document.querySelector("#start-record");
-// let stop_button = document.querySelector("#stop-record");
 let download_link = document.querySelector("#download-video");
 
 let camera_stream = null;
@@ -62,7 +61,6 @@ click_button.addEventListener('click', function () {
     document.getElementById('photo_edited').value = image_data_url
 });
 
-
 function testing() {
   navigator.mediaDevices.getUserMedia({
     video: true,
@@ -70,52 +68,18 @@ function testing() {
   }).then(async function(stream) {
       let recorder = RecordRTC(stream, {
           type: 'gif',
-          // mimeType: 'video/webm',
           recorderType: GifRecorder,
-
       });
       recorder.startRecording();
-
       const sleep = m => new Promise(r => setTimeout(r, m));
       await sleep(3000);
-
       recorder.stopRecording(function() {
           let blob = recorder.getBlob();
           invokeSaveAsDialog(blob);
       });
   });
-
 }
-
 start_button.addEventListener('click', testing)
-
-// start_button.addEventListener('click', function() {
-//     start_button.disabled = true;
-//     // set MIME type of recording as video/webm
-//     media_recorder = new MediaRecorder(camera_stream, { mimeType: 'video/webm' });
-//     // event : new recorded video blob available 
-//     media_recorder.addEventListener('dataavailable', function(e) {
-// 		blobs_recorded.push(e.data);
-//     });
-//     // event : recording stopped & all blobs sent
-//     media_recorder.addEventListener('stop', function() {
-//     // create local object URL from the recorded video blobs
-//     console.log(blobs_recorded)
-//     let video_local = URL.createObjectURL(new Blob(blobs_recorded, { type: 'video/webm' }));
-//     download_link.href = video_local;
-//     });
-//     // start recording with each recorded blob having 1 second video
-//     media_recorder.start(1000);
-//     setTimeout(function(){ 
-//       media_recorder.stop();
-//       start_button.disabled = false;
-//       }, 3000);
-
-// });
-
-// stop_button.addEventListener('click', function() {
-// 	media_recorder.stop(); 
-// });
 
     let frame_uri = '';
     let current_frame = '';
@@ -138,7 +102,6 @@ start_button.addEventListener('click', testing)
     })
     }
     console.log(current_frame)
-
 
 </script>
 {% endblock %}
