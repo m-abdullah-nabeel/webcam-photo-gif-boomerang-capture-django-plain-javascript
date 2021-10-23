@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 {% load social_share %}
 {% block body %}
-<h2>
+<!-- <h2>
     Hello this is editor!
-</h2>
+</h2> -->
 <div>
     <canvas id="myCanvas" width="400" height="500"></canvas>
     <div class="flexrow">
@@ -72,11 +72,18 @@
         link.click();
     }
 
+    function removeClasses(one) {
+      one.classList.remove('selected')
+    }
+
     let emoji_uri = '';
     let current_sticker = '';
     const buttons = document.querySelectorAll(".sticker")
     for (const button of buttons) {
     button.addEventListener('click', function(event) {
+        buttons.forEach(removeClasses);
+        document.querySelectorAll(".frame")
+        button.classList.add("selected")
         if (button.id != 's0') {
             // console.log(button.id) 
             current_sticker = button.id
@@ -93,5 +100,9 @@
     }
 
     console.log(current_sticker)
+
+
+
+// emoji_uri = getValueofSelected(".sticker", 's0')
 </script>
 {% endblock %}

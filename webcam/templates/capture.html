@@ -3,14 +3,11 @@
 {% block body %}
 
 <div>
-  <button id="start-camera" class="btn btn-primary">Start Camera</button>
-  <video id="video" width="320" height="240" autoplay></video>
-  <button id="click-photo" class="btn btn-outline-primary">Click Photo</button>
-  <canvas id="canvas" width="320" height="240"></canvas>
-<!-- video -->
-  <button id="start-record">Start Recording</button>
-  <!-- <button id="stop-record">Stop Recording</button> -->
-  <a id="download-video" download="test.webm">Download Video</a>
+  <div class="screen">
+    <video id="video" width="500" height="500" autoplay></video>
+    <canvas id="canvas" width="500" height="500"></canvas> 
+    <img id="screen-gif" src="" alt=""> 
+  </div>
 
   <div class="flexrow">
       <button id=s0 class="sticker">Clear Frames!</button>
@@ -19,44 +16,55 @@
       {% endfor %}
   </div>
 
-  <form action = "" method = "POST">
-    {% csrf_token %}
-    <input id="username" type="hidden" name="username" value="{{ request.user.id }}">
-    <input id="photo_captured" type="hidden" name="photo_captured" value="">
-    <input id="photo_edited" type="hidden" name="photo_edited" value="">
-    <input class="btn btn-primary" type="submit" value="Save Your Photo">
-  </form>
-  <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+  <div class="buttons">
+    <button id="start-camera" class="btn btn-primary">Start Camera</button>
+    <button id="click-photo" class="btn btn-outline-primary">Click Photo</button>
+    <button id="start-record">Start Recording</button>
+    <a href="" class="btn btn-primary" onclick="download_image()" id="download">DOWNLOAD</a>    
+    <a id="download-video" download="test.webm">Download Video</a>
+    <form action = "" method = "POST">
+      {% csrf_token %}
+      <input id="username" type="hidden" name="username" value="{{ request.user.id }}">
+      <input id="photo_captured" type="hidden" name="photo_captured" value="">
+      <input id="photo_edited" type="hidden" name="photo_edited" value="">
+      <input class="btn btn-primary" type="submit" value="Save Your Photo">
+    </form>  
+  </div>
 
+  <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
 </div>
 
 <script>
 let camera_button = document.querySelector("#start-camera");
 let video = document.querySelector("#video");
+let screen_gif = document.querySelector("#screen-gif");
 let click_button = document.querySelector("#click-photo");
 let canvas = document.querySelector("#canvas");
-//video
 let start_button = document.querySelector("#start-record");
 let download_link = document.querySelector("#download-video");
-
 let camera_stream = null;
 let media_recorder = null;
 let blobs_recorded = [];
 
+screen_gif.style.display = "null";
 camera_button.addEventListener('click', async function() {
    	camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 	  video.srcObject = camera_stream;
+    console.log(video.videoWidth)
+    console.log(video.videoHeight)
 });
 
 click_button.addEventListener('click', function () {
-    console.log(222)
     var img = new Image;
     img.src = frame_uri;
+    // canvas.getContext('2d').drawImage(img, 0, 0, video.videoWidth, video.videoHeight);
     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvas.getContext('2d').drawImage(video, 50, 50, canvas.width-100, canvas.height-100);
+    // canvas.getContext('2d').drawImage(video, 25, 25, canvas.width-50, canvas.height-50);
+    canvas.getContext('2d').drawImage(video, 25, 25, video.videoWidth, video.videoHeight);
+    console.log(video.videoWidth);
+    console.log(video.videoHeight);
    	let image_data_url = canvas.toDataURL('image/jpeg');
-   	// data url of the image
-   	console.log(image_data_url);
+    video.style.display = "none";
     document.getElementById('photo_captured').value = image_data_url
     document.getElementById('photo_edited').value = image_data_url
 });
@@ -64,7 +72,7 @@ click_button.addEventListener('click', function () {
 function testing() {
   navigator.mediaDevices.getUserMedia({
     video: true,
-    audio: true
+    audio: false,
   }).then(async function(stream) {
       let recorder = RecordRTC(stream, {
           type: 'gif',
@@ -72,36 +80,62 @@ function testing() {
       });
       recorder.startRecording();
       const sleep = m => new Promise(r => setTimeout(r, m));
+      canvas.style.display = "none";
+      start_button.disabled = true;
       await sleep(3000);
+      start_button.disabled = false;
       recorder.stopRecording(function() {
           let blob = recorder.getBlob();
           invokeSaveAsDialog(blob);
+          recorder.getDataURL(function(dataURL) { 
+            console.log(dataURL);
+            screen_gif.src = dataURL;
+          });
+          screen_gif.style.display = "block";
+
+
       });
   });
 }
+
 start_button.addEventListener('click', testing)
 
-    let frame_uri = '';
-    let current_frame = '';
-    const buttons = document.querySelectorAll(".frame")
-    for (const button of buttons) {
-    button.addEventListener('click', function(event) {
-        if (button.id != 'f0') {
-            // console.log(button.id) 
-            current_frame = button.id
-            frame_uri = button.src
-            button.classList.add("selected")
-            console.log(current_frame)
-        }
-        else if (button.id === 's0') {
-            // console.log(button.id) 
-            current_frame = ''
-            frame_uri = ''
-            console.log(current_frame)
-        }
-    })
+function download_image(){
+    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    var link = document.createElement('a');
+    link.download = "my-image.png";
+    link.href = image;
+    link.click();
+}
+
+let frame_uri = '';
+let current_frame = '';
+const buttons = document.querySelectorAll(".frame")
+
+function removeClasses(one) {
+  one.classList.remove('selected')
+}
+
+for (const button of buttons) {
+button.addEventListener('click', function(event) {
+    buttons.forEach(removeClasses);
+    document.querySelectorAll(".frame")
+    button.classList.add("selected")
+    if (button.id != 'f0') {
+        current_frame = button.id
+        frame_uri = button.src
+        buttons.forEach(removeClasses);
+        document.querySelectorAll(".frame")
+        button.classList.add("selected")
+        console.log(current_frame)
     }
-    console.log(current_frame)
+    else if (button.id === 's0') {
+        current_frame = ''
+        frame_uri = ''
+        console.log(current_frame)
+    }
+})
+}
 
 </script>
 {% endblock %}
