@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+{% load social_share %}
+{% block body %}
+<h2>
+    Hello this is editor!
+</h2>
+<div>
+    <canvas id="myCanvas" width="400" height="500"></canvas>
+    <div class="flexrow">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input id="photo_edited" type="hidden" name="photo_edited" value="">
+            <input class="btn btn-primary" type="submit" value="Save Your Photo">
+        </form>
+        <a href="" class="btn btn-primary" onclick="download_image()" id="download">DOWNLOAD</a>    
+    </div>
+    
+    <div class="flexrow">
+        <button id=s0 class="sticker">Clear Sticker!</button>
+        {% for emoji in emojis %}
+        <img src="{{ emoji.emoji }}" alt="{{ emoji.emoji_id }}" width="40" height="40" id="{{ emoji.emoji_id }}" class="sticker">
+        {% endfor %}
+    </div>
+      
+    <div class="flexrow">
+        {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
+    </div>
+
+</div>
+
+<script>
+    // var strDataURI = '{{ photo.photo_captured }}';
+    var strDataURI = '{{ photo.photo_edited }}';
+    console.log(strDataURI)
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    function draw_image(ctx, strDataURI, dx, dy, dWidth, dHeight) {
+        var img = new Image;
+        img.onload = function(){
+        ctx.drawImage(img, dx, dy, dWidth, dHeight); // Or at whatever offset you like
+        // ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+        };
+        img.src = strDataURI;  
+    }
+
+    draw_image(ctx, strDataURI, 0, 0, 400, 500)
+    // draw_image(ctx, strDataURI, 300, 370, 40, 40)
+    guessX = 0; //stores user's click on canvas
+    guessY = 0; //stores user's click on canvas
+    myCanvas.addEventListener('click', function storeGuess(event) {
+        var x = event.offsetX;
+        var y = event.offsetY;
+        guessX = x;
+        guessY = y;
+        console.log("x coords: " + guessX + ", y coords: " + guessY);
+        // alert(guessX + ", " + guessY);
+        // draw_image(ctx, strDataURI, guessX, guessY, 40, 40)
+        draw_image(ctx, emoji_uri, guessX, guessY, 40, 40)
+
+        image_co_data = c.toDataURL( "image/png" );
+        document.getElementById('photo_edited').value = image_co_data
+        console.log(image_co_data)
+        // document.getElementById('photo_edited').value = image_co_data
+    })
+
+    function download_image(){
+        image = c.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        var link = document.createElement('a');
+        link.download = "my-image.png";
+        link.href = image;
+        link.click();
+    }
+
+    let emoji_uri = '';
+    let current_sticker = '';
+    const buttons = document.querySelectorAll(".sticker")
+    for (const button of buttons) {
+    button.addEventListener('click', function(event) {
+        if (button.id != 's0') {
+            // console.log(button.id) 
+            current_sticker = button.id
+            emoji_uri = button.src
+            console.log(current_sticker)
+        }
+        else if (button.id === 's0') {
+            // console.log(button.id) 
+            current_sticker = ''
+            emoji_uri = ''
+            console.log(current_sticker)
+        }
+    })
+    }
+
+    console.log(current_sticker)
+</script>
+{% endblock %}

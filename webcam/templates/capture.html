@@ -1,0 +1,144 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block body %}
+
+<div>
+  <button id="start-camera" class="btn btn-primary">Start Camera</button>
+  <video id="video" width="320" height="240" autoplay></video>
+  <button id="click-photo" class="btn btn-outline-primary">Click Photo</button>
+  <canvas id="canvas" width="320" height="240"></canvas>
+<!-- video -->
+  <button id="start-record">Start Recording</button>
+  <!-- <button id="stop-record">Stop Recording</button> -->
+  <a id="download-video" download="test.webm">Download Video</a>
+
+  <div class="flexrow">
+      <button id=s0 class="sticker">Clear Frames!</button>
+      {% for frame in frames %}
+      <img src="{{ frame.frame }}" alt="{{ frame.frame_id }}" width="80" height="80" id="{{ frame.frame_id }}" class="frame">
+      {% endfor %}
+  </div>
+
+  <form action = "" method = "POST">
+    {% csrf_token %}
+    <input id="username" type="hidden" name="username" value="{{ request.user.id }}">
+    <input id="photo_captured" type="hidden" name="photo_captured" value="">
+    <input id="photo_edited" type="hidden" name="photo_edited" value="">
+    <input class="btn btn-primary" type="submit" value="Save Your Photo">
+  </form>
+  <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+
+</div>
+
+<script>
+let camera_button = document.querySelector("#start-camera");
+let video = document.querySelector("#video");
+let click_button = document.querySelector("#click-photo");
+let canvas = document.querySelector("#canvas");
+//video
+let start_button = document.querySelector("#start-record");
+// let stop_button = document.querySelector("#stop-record");
+let download_link = document.querySelector("#download-video");
+
+let camera_stream = null;
+let media_recorder = null;
+let blobs_recorded = [];
+
+camera_button.addEventListener('click', async function() {
+   	camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+	  video.srcObject = camera_stream;
+});
+
+click_button.addEventListener('click', function () {
+    console.log(222)
+    var img = new Image;
+    img.src = frame_uri;
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+    canvas.getContext('2d').drawImage(video, 50, 50, canvas.width-100, canvas.height-100);
+   	let image_data_url = canvas.toDataURL('image/jpeg');
+   	// data url of the image
+   	console.log(image_data_url);
+    document.getElementById('photo_captured').value = image_data_url
+    document.getElementById('photo_edited').value = image_data_url
+});
+
+
+function testing() {
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  }).then(async function(stream) {
+      let recorder = RecordRTC(stream, {
+          type: 'gif',
+          // mimeType: 'video/webm',
+          recorderType: GifRecorder,
+
+      });
+      recorder.startRecording();
+
+      const sleep = m => new Promise(r => setTimeout(r, m));
+      await sleep(3000);
+
+      recorder.stopRecording(function() {
+          let blob = recorder.getBlob();
+          invokeSaveAsDialog(blob);
+      });
+  });
+
+}
+
+start_button.addEventListener('click', testing)
+
+// start_button.addEventListener('click', function() {
+//     start_button.disabled = true;
+//     // set MIME type of recording as video/webm
+//     media_recorder = new MediaRecorder(camera_stream, { mimeType: 'video/webm' });
+//     // event : new recorded video blob available 
+//     media_recorder.addEventListener('dataavailable', function(e) {
+// 		blobs_recorded.push(e.data);
+//     });
+//     // event : recording stopped & all blobs sent
+//     media_recorder.addEventListener('stop', function() {
+//     // create local object URL from the recorded video blobs
+//     console.log(blobs_recorded)
+//     let video_local = URL.createObjectURL(new Blob(blobs_recorded, { type: 'video/webm' }));
+//     download_link.href = video_local;
+//     });
+//     // start recording with each recorded blob having 1 second video
+//     media_recorder.start(1000);
+//     setTimeout(function(){ 
+//       media_recorder.stop();
+//       start_button.disabled = false;
+//       }, 3000);
+
+// });
+
+// stop_button.addEventListener('click', function() {
+// 	media_recorder.stop(); 
+// });
+
+    let frame_uri = '';
+    let current_frame = '';
+    const buttons = document.querySelectorAll(".frame")
+    for (const button of buttons) {
+    button.addEventListener('click', function(event) {
+        if (button.id != 'f0') {
+            // console.log(button.id) 
+            current_frame = button.id
+            frame_uri = button.src
+            button.classList.add("selected")
+            console.log(current_frame)
+        }
+        else if (button.id === 's0') {
+            // console.log(button.id) 
+            current_frame = ''
+            frame_uri = ''
+            console.log(current_frame)
+        }
+    })
+    }
+    console.log(current_frame)
+
+
+</script>
+{% endblock %}

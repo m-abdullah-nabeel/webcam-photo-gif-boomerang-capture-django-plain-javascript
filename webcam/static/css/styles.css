@@ -1,0 +1,32 @@
+body{
+    background-color: cadetblue;
+}
+#snapshot{
+    opacity: 10;
+}
+.mycard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1.2px dotted blue;
+    width: 400px;
+    margin: auto;
+    padding: 5px;
+    border-radius: 3%;
+}
+
+.flexrow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: space-around;
+    border-top: 1.2px dotted black;
+    width: 400px;
+    margin: auto;
+    margin: 5px;
+}
+
+.selected{
+    border: 10px solid blue;
+}

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2> Details of Photos of {{ request.user }}</h2>
+<div class="ones">
+
+        {% for object in specifics %}
+        <li>
+            <div class="">
+                <div>
+                    <h3>User: {{ request.user }}</h3>
+                </div>
+                <div>
+                    <a href="{{ object.photo_edited }}">
+                        <img src="{{ object.photo_edited }}" alt="screenshot">
+                    </a>
+                </div>
+                <hr>
+            </div>    
+        </li>
+
+        {% empty %}
+        <li>No objects yet.</li>
+        {% endfor %}
+
+</div>
+{% endblock %}

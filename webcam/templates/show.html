@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% load social_share %}
+{% block body %}
+<h2>
+    Hello this is Displayer!
+</h2>
+<div >
+    <canvas id="myCanvas" width="400" height="500"></canvas>
+</div>
+<div class="flexrow">
+    <a href="{% url 'editor' id=photo.id %}" class="btn btn-primary">EDIT</a>
+    <a href="" onclick="download_image()" id="download" class="btn btn-primary">DOWNLOAD</a>    
+</div>
+<div class="flexrow">
+    {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
+</div>
+
+
+<script>
+    var strDataURI = '{{ photo.photo_edited }}';
+    console.log(strDataURI)
+
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    function draw_image(ctx, strDataURI, dx, dy, dWidth, dHeight) {
+        var img = new Image;
+        img.onload = function(){
+        ctx.drawImage(img, dx, dy, dWidth, dHeight); // Or at whatever offset you like
+        // ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+        };
+        img.src = strDataURI;  
+        image_co_data = c.toDataURL( "image/png" );
+        document.getElementById('download').href = image_co_data
+        // document.getElementById('photo_captured').value = image_co_data
+        // document.getElementById('photo_edited').value = image_co_data
+    }
+
+    draw_image(ctx, strDataURI, 0, 0, 400, 500)
+
+    function download_image(){
+        // var canvas = document.getElementById("c");
+        image = c.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        var link = document.createElement('a');
+        link.download = "my-image.png";
+        link.href = image;
+        link.click();
+    }
+
+</script>
+
+{% endblock %}
