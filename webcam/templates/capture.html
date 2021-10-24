@@ -7,77 +7,32 @@
     <img id="screen-gif" src="" alt=""> 
   </div>
 
-  <!-- <div class="flexrow">
-      <button id=s0 class="sticker">Clear Frames!</button>
-      {% for frame in frames %}
-      <img src="{{ frame.frame }}" alt="{{ frame.frame_id }}" width="80" height="80" id="{{ frame.frame_id }}" class="frame">
-      {% endfor %}
-  </div> -->
-
   <div class="buttons">
     <button id="start-camera" class="btn btn-primary menu_button">Take Picture</button>
     <button id="start-record" class="menu_button">GIF</button>
     <button id="start-boomerang" class="menu_button">Boomerang</button>
-    <button id="re-choose" class="btn btn-primary menu_button">Re Choose</button>
+    <button id="re-choose" class="btn btn-primary">
+      <a href="{% url 'capture' %}">Re Choose</a>
+    </button>
 
     <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
     <a href="" class="btn btn-primary pic_btn" onclick="download_image()" id="download">DOWNLOAD</a>   
 
-
-    <form action = "" method = "POST" class="gif_buttons">
+    <form action = "" method = "POST" class="pic_btn">
       {% csrf_token %}
       <input id="photo_captured" type="hidden" name="photo_captured" value="">
       <input id="photo_edited" type="hidden" name="photo_edited" value="">
-      <input class="btn btn-primary gif_buttons" type="submit" value="Save Your Photo">
+      <input class="btn btn-primary pic_btn" type="submit" value="Save Your Photo">
     </form>   
-      <a id="download-video" class="gif_buttons" download="test.gif">Download Video</a>
-
+      <a id="download-video" class="gif_buttons" download="test.gif">Download Video</a>  
   </div>
-
-  <script>
-    var gif_btn = document.querySelectorAll(".gif_buttons");
-    var pic_btn = document.querySelectorAll(".pic_btn")
-    var menu_button = document.querySelectorAll(".menu_button");
-    // choose capture type : pic / gif / boomerang
-    let capture_type1;
-
-    menu_button.forEach(choose_capture);
-    gif_btn.forEach(hide);
-    pic_btn.forEach(hide);
-
-    function hide(one_item) {
-      one_item.style.display = "none";
-    }
-    function show(one_item) {
-      one_item.style.display = "block";
-    }
-
-    function choose_capture(one_menu_button) {
-      one_menu_button.addEventListener('click', () => {
-        var capture_type1 = one_menu_button.id
-        console.log(capture_type1);
-        menu_button.forEach(hide)
-        one_menu_button.style.display = "block";
-      });
-    }
-    console.log(capture_type1)
-    function showOptions(capture_type1) {
-      menu_button.forEach(hide);
-      if (capture_type1 == "start-camera") {
-        show(click_button);
-        // gif_btn.forEach(hide);
-        // pic_btn.forEach(show);
-      }
-      else if (capture_type1 == "start-record") {
-        show(start_button);
-      }
-      else if (capture_type1 == "start-boomerang") {
-        show(start_boomerang);
-      }
-      }
-
-  </script>
   
+  <div class="flexrow">
+    <button id=f0 class="frame">Clear Frames!</button>
+    {% for frame in frames %}
+    <img src="{{ frame.frame }}" alt="{{ frame.id }}" width="80" height="80" id="{{ frame.id }}" class="frame">
+    {% endfor %}
+  </div>
   <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
 
 <script>
@@ -89,30 +44,54 @@ let canvas = document.querySelector("#canvas");
 let start_button = document.querySelector("#start-record");
 let start_boomerang = document.querySelector("#start-boomerang");
 let download_link = document.querySelector("#download-video");
+let gif_btn = document.querySelectorAll(".gif_buttons");
+let pic_btn = document.querySelectorAll(".pic_btn")
+let menu_btn = document.querySelectorAll(".menu_button");
+let capture_type1;
+
 let camera_stream = null;
 let media_recorder = null;
 let blobs_recorded = [];
 
+let frame_uri = '';
+let current_frame = '';
+
+const hide = n => n.style.display = "none";
+const show = n => n.style.display = "block";
+
+gif_btn.forEach(hide);
+pic_btn.forEach(hide);
 screen_gif.style.display = "null";
 camera_button.addEventListener('click', async function() {
    	camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 	  video.srcObject = camera_stream;
+    menu_btn.forEach(hide);
+    pic_btn.forEach(show);
 });
+
+start_boomerang.addEventListener('click', function () {
+  menu_btn.forEach(hide);
+})
+start_button.addEventListener('click', testing)
 
 click_button.addEventListener('click', function () {
     var img = new Image;
     img.src = frame_uri;
+    var aspect_ratio = video.videoWidth/video.videoHeight
+    console.log(video.videoWidth,video.videoHeight)
     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-    canvas.getContext('2d').drawImage(video, 25, 25, canvas.width-50, canvas.height-50);
-    console.log(video.videoWidth);
-    console.log(video.videoHeight);
+    canvas.getContext('2d').drawImage(video, 10, 10, canvas.width-20, canvas.height-20);
    	let image_data_url = canvas.toDataURL('image/jpeg');
     video.style.display = "none";
+    // canvas.height = video.videoHeight;
     document.getElementById('photo_captured').value = image_data_url
     document.getElementById('photo_edited').value = image_data_url
 });
 
 function testing() {
+  menu_btn.forEach(hide);
+  gif_btn.forEach(show);
+
   navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -145,8 +124,6 @@ function testing() {
   });
 }
 
-start_button.addEventListener('click', testing)
-
 function download_image(){
     image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
     var link = document.createElement('a');
@@ -155,28 +132,21 @@ function download_image(){
     link.click();
 }
 
-let frame_uri = '';
-let current_frame = '';
-const buttons = document.querySelectorAll(".frame")
-
 function removeClasses(one) {
   one.classList.remove('selected')
 }
-
+const buttons = document.querySelectorAll(".frame")
 for (const button of buttons) {
 button.addEventListener('click', function(event) {
     buttons.forEach(removeClasses);
-    document.querySelectorAll(".frame")
     button.classList.add("selected")
     if (button.id != 'f0') {
         current_frame = button.id
         frame_uri = button.src
-        buttons.forEach(removeClasses);
-        document.querySelectorAll(".frame")
-        button.classList.add("selected")
         console.log(current_frame)
     }
-    else if (button.id === 's0') {
+    else if (button.id === 'f0') {
+        console.log(222)
         current_frame = ''
         frame_uri = ''
         console.log(current_frame)

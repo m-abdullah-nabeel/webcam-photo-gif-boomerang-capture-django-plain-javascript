@@ -1,5 +1,5 @@
 body, html{
-    background-color: green;
+    background-color: rgb(186, 231, 186);
     margin: 0;
     padding: 0;
     height: 100%;
@@ -24,7 +24,7 @@ body, html{
 /* responsive */
 @media (min-width: 560px) {
     body {
-      background-color: red;
+      background-color: rgb(85, 40, 40);
     }
     .screen {
         width: 600px;
@@ -47,7 +47,7 @@ body, html{
 }
 video, canvas{
     width: 100%;
-    height: auto;
+    height: 100%;
   }
 
 video {
