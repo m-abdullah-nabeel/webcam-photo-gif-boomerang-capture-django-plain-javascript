@@ -13,13 +13,18 @@ body, html{
 }
 .screen{
     width: auto;
-    height: 60%;
+    /* height: 60%; */
+    height: 480px;
 }
 .buttons{
     width: auto;
     height: auto;
     margin: 2rem;
 
+}
+.flexrow{
+    display: flex;
+    flex-direction: horizontal;
 }
 /* responsive */
 @media (min-width: 560px) {
@@ -37,6 +42,10 @@ body, html{
 /* selected sticker or frames */
 .selected{
     border: 5px solid blue;
+}
+.frame{
+    height: 80px;
+    width: 80px;
 }
 /* showing camera and captured at one place */
 .screen {

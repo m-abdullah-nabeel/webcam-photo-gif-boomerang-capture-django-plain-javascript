@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block body %}
+<input type="file" onchange="previewFile()"><br>
+<form action = "" method = "POST" id="picToDataUrl" class="pic_btn">
+    {% csrf_token %}
+    <input id="emoji_added" type="hidden" name="emoji_added" value="">
+    <input type="submit">
+</form>   
+<img src="" height="200" alt="Image preview">
+
+<script>
+  function previewFile() {
+  const emoji_added = document.querySelector("#emoji_added");
+  const preview = document.querySelector('img');
+  const file = document.querySelector('input[type=file]').files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener("load", function () {
+    preview.src = reader.result;
+    alert(reader.result);
+    emoji_added.value = reader.result;
+  }, false);
+
+  if (file) {
+    var dat_img = reader.readAsDataURL(file);
+    alert(dat_img);
+    emoji_added.value = dat_img;
+  }
+}
+
+</script>
+{% endblock %}

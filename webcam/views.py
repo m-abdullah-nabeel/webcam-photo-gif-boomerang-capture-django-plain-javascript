@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from .models import Emoji, Photo, Frame
 from django.contrib.auth.decorators import login_required
+import base64
 
 
 def capture(request):
@@ -49,3 +50,37 @@ def ListOnes(request,):
     specifics = Photo.objects.filter(pk=user_id)
     print(len(specifics))
     return render(request, 'list.html', {'specifics': specifics, })
+
+def add_frames(request):
+    if request.method == "POST":
+        if request.POST.get('frame_added'):
+            print(request.POST)
+            image = request.POST.get('frame_added')
+            frame=Frame()
+            frame.frame= request.POST.get('frame_added')
+            frame.save()      
+            id = frame.pk
+            print(image, id)
+            return render(request, 'add_frame.html', {"id": id})
+        return render(request, 'add_frame.html', )
+    if request.method == "GET":
+        print("Get")
+        return render(request, 'add_frame.html', )
+
+
+def add_images(request):
+    if request.method == "POST":
+        if request.POST.get('emoji_added'):
+            print(request.POST)
+            image = request.POST.get('emoji_added')
+            emoji=Emoji()
+            emoji.emoji= request.POST.get('emoji_added')
+            emoji.save()      
+            id = emoji.pk
+            print(image, id)
+            return render(request, 'add_emoji.html', {"id": id})
+        return render(request, 'add_emoji.html', )
+    if request.method == "GET":
+        print("Get")
+        return render(request, 'add_emoji.html', )
+
