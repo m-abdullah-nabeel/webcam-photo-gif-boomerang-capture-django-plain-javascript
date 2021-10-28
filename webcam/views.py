@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from .models import Emoji, Photo, Frame
 from django.contrib.auth.decorators import login_required
-import base64
+from django.contrib.auth.decorators import user_passes_test
 
 
 def capture(request):
@@ -43,14 +43,16 @@ def editor(request, id):
         context = {'photo': photo, 'emojis': emojis, }
         return render(request,'editor.html', context)
 
+def ListOnes(request):
+    context ={}
+    context["dataset"] = Photo.objects.all().order_by('pk')[:]
+    return render(request, 'test.html', context)
 
-def ListOnes(request,):
-    user_id = request.user.id
-    print(request.user.id)
-    specifics = Photo.objects.filter(pk=user_id)
-    print(len(specifics))
-    return render(request, 'list.html', {'specifics': specifics, })
+def check_admin(user):
+   return user.is_superuser
 
+@login_required
+@user_passes_test(check_admin)
 def add_frames(request):
     if request.method == "POST":
         if request.POST.get('frame_added'):
@@ -67,7 +69,8 @@ def add_frames(request):
         print("Get")
         return render(request, 'add_frame.html', )
 
-
+@login_required
+@user_passes_test(check_admin)
 def add_images(request):
     if request.method == "POST":
         if request.POST.get('emoji_added'):

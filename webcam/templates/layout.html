@@ -13,9 +13,17 @@
 </head>
 <body>
     <div class="container">
+        <nav>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'add_images' %}">Add New Stickers</a>
+            <a href="{% url 'add_frames' %}">Add New Frames</a>
+            {% endif %}
+            <a href="{% url 'capture' %}">Capture New Photo</a>
+            <a href="{% url 'ListOnes' %}">All your Photos</a>
+        </nav>
         {% block body %}
         {% endblock %}  
     </div>
-    
+        
 </body>
 </html>

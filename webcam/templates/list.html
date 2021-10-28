@@ -1,26 +1,19 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2> Details of Photos of {{ request.user }}</h2>
+
+{% if request.user.is_superuser %}
 <div class="ones">
-
-        {% for object in specifics %}
+        {% for photo in all_photos %}
         <li>
-            <div class="">
-                <div>
-                    <h3>User: {{ request.user }}</h3>
-                </div>
-                <div>
-                    <a href="{{ object.photo_edited }}">
-                        <img src="{{ object.photo_edited }}" alt="screenshot">
-                    </a>
-                </div>
-                <hr>
-            </div>    
+            <div>
+                <a href="{{ photo.photo_edited }}">
+                    <img src="{{ photo.photo_edited }}" alt="screenshot">
+                </a>
+            </div>
         </li>
-
         {% empty %}
         <li>No objects yet.</li>
         {% endfor %}
-
 </div>
+{% endif %}
 {% endblock %}

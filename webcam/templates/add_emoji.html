@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block body %}
+{% if request.user.is_superuser %}
+
 <input type="file" onchange="previewFile()"><br>
 <form action = "" method = "POST" id="picToDataUrl" class="pic_btn">
     {% csrf_token %}
@@ -8,6 +10,7 @@
     <input type="submit">
 </form>   
 <img src="" height="200" alt="Image preview">
+{% endif %}
 
 <script>
   function previewFile() {
@@ -30,4 +33,5 @@
 }
 
 </script>
+
 {% endblock %}

@@ -1,0 +1,11 @@
+{% block content %}
+<div class="main" style="width: 100%;">
+    {% for data in dataset %}
+    <div style="width: 30;">
+        {{ data.pk }}<br/>
+        <img src="{{ data.photo_edited }}">
+        <hr/>    
+    </div>
+    {% endfor %} 
+</div>
+{% endblock %}
