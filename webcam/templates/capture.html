@@ -21,16 +21,10 @@
       {% csrf_token %}
       <input id="photo_captured" type="hidden" name="photo_captured" value="">
       <input id="photo_edited" type="hidden" name="photo_edited" value="">
-      <input class="btn btn-primary pic_btn" type="submit" value="Save Your Photo">
+      <input class="button_input" type="submit" value="Save Your Photo">
     </form>   
   </div>
-  
-  <div class="flexrow" style="max-width: 300px;">
-    <button id=f0 class="">Clear Frames!</button>
-    {% for frame in frames %}
-    <img src="{{ frame.frame }}" alt="{{ frame.id }}" id="{{ frame.id }}" class="frame">
-    {% endfor %}
-  </div>
+
   <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
 
 <script>
@@ -110,8 +104,7 @@ function testing() {
         invokeSaveAsDialog(blob);        
       })
       recorder.getDataURL(function(dataURL) { 
-        // console.log(dataURL);
-        screen_gif.src = dataURL;
+          screen_gif.src = dataURL;
       });
       screen_gif.style.display = "block";
   });
@@ -126,13 +119,13 @@ button.addEventListener('click', function(event) {
     buttons.forEach(removeClasses);
     button.classList.add("selected")
     if (button.id != 'f0') {
-        current_frame = button.id
-        frame_uri = button.src
+        current_frame = button.id;
+        frame_uri = button.src;
         // console.log(current_frame)
     }
     else if (button.id === 'f0') {
-        current_frame = ''
-        frame_uri = ''
+        current_frame = '';
+        frame_uri = '';
         // console.log(current_frame)
     }
 })};

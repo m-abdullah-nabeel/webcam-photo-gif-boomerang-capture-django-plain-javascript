@@ -9,32 +9,38 @@
         <form action="" method="post">
             {% csrf_token %}
             <input id="photo_edited" type="hidden" name="photo_edited" value="">
-            <input class="btn btn-primary" type="submit" value="Save Your Photo">
+            <input class="button_input" type="submit" value="Save Your Photo">
         </form>
-        <a href="" class="btn btn-primary" onclick="download_image()" id="download">DOWNLOAD</a>    
+        <a href="" class="" onclick="download_image()" id="download">DOWNLOAD</a>    
     </div>
-    
     <div class="flexrow">
         <button id=s0 class="sticker">Clear Sticker!</button>
         {% for emoji in emojis %}
         <img src="{{ emoji.emoji }}" alt="{{ emoji.pk }}" width="40" height="40" id="{{ emoji.id }}" class="sticker">
         {% endfor %}
     </div>
-
+    <div class="flexrow" style="max-width: 300px;">
+        <button id=f0 class="">Clear Frames!</button>
+        <button id="apply_frame">Apply Frame</button>
+        {% for frame in frames %}
+        <img src="{{ frame.frame }}" alt="{{ frame.id }}" id="{{ frame.id }}" class="frame">
+        {% endfor %}
+      </div>
     <div class="flexrow">
         {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
     </div>
-
 </div>
 
 <script>
     var imgWidth = sessionStorage.getItem("imgWidth");
     var imgHeight = sessionStorage.getItem("imgHeight");
     var strDataURI = '{{ photo.photo_edited }}';
+    var apply_frame = document.getElementById("apply_frame");
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var guessX = 0;
     var guessY = 0;
+    let frame_uri = '';
 
     if (imgHeight != "" && imgWidth != "") {
         c.width = imgWidth;
@@ -44,8 +50,6 @@
         c.width = "300px";
         c.height = "300px";
     }
-    // c.width = imgWidth;
-    // c.height = imgHeight;
 
     function draw_image(ctx, strDataURI, dx, dy, dWidth, dHeight) {
         var img = new Image;
@@ -99,8 +103,27 @@
         }
     })
     };
+    const frames = document.querySelectorAll(".frame")
+    for (const button of frames) {
+    button.addEventListener('click', function(event) {
+        buttons.forEach(removeClasses);
+        button.classList.add("selected")
+        if (button.id != 'f0') {
+            current_frame = button.id;
+            frame_uri = button.src;
+        }
+        else if (button.id === 'f0') {
+            current_frame = '';
+            frame_uri = '';
+        }
+    })};
+    apply_frame.addEventListener('click', function () {
+        var img = new Image;
+        img.src = frame_uri;
+        c.getContext('2d').drawImage(img, 0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"));
+        image_co_data = c.toDataURL( "image/png" );
+        document.getElementById('photo_edited').value = image_co_data
 
-// emoji_uri = getValueofSelected(".sticker", 's0')
+    });
 </script>
-
 {% endblock %}

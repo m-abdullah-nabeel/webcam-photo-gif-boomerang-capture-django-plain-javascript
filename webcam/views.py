@@ -28,8 +28,6 @@ def show(request, id):
 
 def editor(request, id):
     if request.method == 'POST':
-        # print(request.POST)
-        # print(id)
         if request.POST.get('photo_edited'):
             photo = Photo.objects.get(pk=id)
             emojis = Emoji.objects.all()
@@ -38,9 +36,10 @@ def editor(request, id):
             context = {'photo': photo, 'emojis': emojis, }
             return render(request,'editor.html', context)
     else:
+        frames = Frame.objects.all()
         emojis = Emoji.objects.all()
         photo = Photo.objects.get(pk=id)
-        context = {'photo': photo, 'emojis': emojis, }
+        context = {'photo': photo, 'emojis': emojis, 'frames': frames}
         return render(request,'editor.html', context)
 
 def ListOnes(request):
