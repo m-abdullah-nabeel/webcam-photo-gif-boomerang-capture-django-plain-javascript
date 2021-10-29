@@ -1,5 +1,4 @@
 body, html{
-    background-color: rgb(186, 231, 186);
     margin: 0;
     padding: 0;
     height: 100%;
@@ -11,33 +10,24 @@ body, html{
     height: 100%;
     padding: 2%;
 }
-.screen{
-    width: auto;
-    /* height: 60%; */
-    height: 480px;
-}
 .buttons{
     width: auto;
     height: auto;
     margin: 2rem;
-
 }
 .flexrow{
-    display: flex;
-    flex-direction: horizontal;
+    max-width: 300px;
 }
 /* responsive */
 @media (min-width: 560px) {
-    body {
-      background-color: rgb(85, 40, 40);
-    }
-    .screen {
-        width: 600px;
-        height: 600px;
+    .container{
+        max-width: 60vw;
+    }    
+    .screen{
+        max-width: 40vw;
         position: relative;
-        margin: 20px;
     }
-  }
+}
 
 /* selected sticker or frames */
 .selected{
@@ -49,26 +39,16 @@ body, html{
 }
 /* showing camera and captured at one place */
 .screen {
-    /* width: 600px;
-    height: 600px; */
+    width: 60vw;
     position: relative;
-    margin: 2%;
+    margin: auto;
 }
 video, canvas{
     width: 100%;
-    height: 100%;
   }
 
 video {
-    /* width: 100%;
-    height: 100%; */
     position: absolute;
     top: 0;
     left: 0;
-    border: 2px dotted blue;
-}
-canvas {
-    z-index: 100;
-    border: 2px dotted green;
-
 }

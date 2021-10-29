@@ -1,11 +1,28 @@
 {% block content %}
-<div class="main" style="width: 100%;">
+<div class="images_gallery" style="width: 100%;">
     {% for data in dataset %}
-    <div style="width: 30;">
-        {{ data.pk }}<br/>
-        <img src="{{ data.photo_edited }}">
-        <hr/>    
-    </div>
+    <!-- <div class="one_image"> -->
+        <a href="{% url 'editor' data.id %}">
+            <img src="{{ data.photo_edited }}" class="one_image">
+        </a>
+        <!-- <hr/>     -->
+    <!-- </div> -->
+    <style>
+        .images_gallery{
+            max-width: 90%;
+            margin: auto;
+        }
+        .one_image{
+            max-width: 300px;
+            border: 2px solid black;
+        }
+        @media (min-width: 560px) {
+            .one_image{
+                max-width: 300px;
+                border: 2px solid black;
+            }
+        }
+    </style>
     {% endfor %} 
 </div>
 {% endblock %}

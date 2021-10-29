@@ -7,7 +7,6 @@
     <img id="screen-gif" src="" alt=""> 
   </div>
 
-
   <div class="buttons">
     <button id="start-camera" class="btn btn-primary menu_button">Take Picture</button>
     <button id="start-record" class="menu_button">GIF</button>
@@ -17,7 +16,6 @@
     </button>
 
     <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
-    <a href="" class="btn btn-primary pic_btn" onclick="download_image()" id="download">DOWNLOAD</a>   
 
     <form action = "" method = "POST" class="pic_btn">
       {% csrf_token %}
@@ -25,11 +23,10 @@
       <input id="photo_edited" type="hidden" name="photo_edited" value="">
       <input class="btn btn-primary pic_btn" type="submit" value="Save Your Photo">
     </form>   
-      <a id="download-video" class="gif_buttons" download="test.gif">Download Video</a>  
   </div>
   
-  <div class="flexrow">
-    <button id=f0 class="frame">Clear Frames!</button>
+  <div class="flexrow" style="max-width: 300px;">
+    <button id=f0 class="">Clear Frames!</button>
     {% for frame in frames %}
     <img src="{{ frame.frame }}" alt="{{ frame.id }}" id="{{ frame.id }}" class="frame">
     {% endfor %}
@@ -50,17 +47,13 @@ let gif_btn = document.querySelectorAll(".gif_buttons");
 let pic_btn = document.querySelectorAll(".pic_btn")
 let menu_btn = document.querySelectorAll(".menu_button");
 let capture_type1;
-
 let camera_stream = null;
 let media_recorder = null;
 let blobs_recorded = [];
-
 let frame_uri = '';
 let current_frame = '';
-
 const hide = n => n.style.display = "none";
 const show = n => n.style.display = "block";
-
 gif_btn.forEach(hide);
 pic_btn.forEach(hide);
 screen_gif.style.display = "null";
@@ -75,23 +68,20 @@ start_boomerang.addEventListener('click', function () {
   menu_btn.forEach(hide);
 })
 start_button.addEventListener('click', testing)
-
 click_button.addEventListener('click', function () {
     var img = new Image;
     img.src = frame_uri;
-    var aspect_ratio = video.videoWidth/video.videoHeight;
-    console.log("screen width and height: ", screen.offsetWidth, screen.offsetHeight);
-    console.log("video width and height: ", video.videoWidth,video.videoHeight);
-    console.log("aspect ratio: ", aspect_ratio);
-    // canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-    // canvas.getContext('2d').drawImage(video, 10, 10, canvas.width-20, canvas.height-20);
-    // console.log(canvas.width, (screen.offsetWidth/aspect_ratio))
-    console.log(screen.offsetWidth, (screen.offsetWidth/aspect_ratio))
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, (screen.offsetWidth/aspect_ratio));
+    sessionStorage.setItem("imgWidth", video.offsetWidth);
+    sessionStorage.setItem("imgHeight", video.offsetHeight);
+    document.cookie = `imgWidth=${video.offsetWidth}, expires=Thu, 01 Jan 1970 00:00:00 UTC;`
+    document.cookie = `imgHeight:${video.offsetHeight}, expires=Thu, 01 Jan 1970 00:00:00 UTC;`
+    canvas.width = video.offsetWidth;
+    canvas.height = video.offsetHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
+    canvas.getContext('2d').drawImage(img, 0, 0, video.offsetWidth, video.offsetHeight);
    	let image_data_url = canvas.toDataURL('image/jpeg');
-    //  video.style.display = "none";
-    video.style.opacity = 0.001;
+    video.style.display = "none";
+    click_button.style.display = "none";
     document.getElementById('photo_captured').value = image_data_url
     document.getElementById('photo_edited').value = image_data_url
 });
@@ -99,7 +89,6 @@ click_button.addEventListener('click', function () {
 function testing() {
   menu_btn.forEach(hide);
   gif_btn.forEach(show);
-
   navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -115,29 +104,17 @@ function testing() {
       await sleep(3000);
       start_button.disabled = false;
       recorder.stopRecording(function() {
-          // let blob = recorder.getBlob();
-          // invokeSaveAsDialog(blob);
       });
       download_link.addEventListener('click', function () {
         let blob = recorder.getBlob();
         invokeSaveAsDialog(blob);        
       })
-
       recorder.getDataURL(function(dataURL) { 
-        console.log(dataURL);
+        // console.log(dataURL);
         screen_gif.src = dataURL;
       });
       screen_gif.style.display = "block";
-
   });
-}
-
-function download_image(){
-    image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    var link = document.createElement('a');
-    link.download = "my-image.png";
-    link.href = image;
-    link.click();
 }
 
 function removeClasses(one) {
@@ -151,16 +128,13 @@ button.addEventListener('click', function(event) {
     if (button.id != 'f0') {
         current_frame = button.id
         frame_uri = button.src
-        console.log(current_frame)
+        // console.log(current_frame)
     }
     else if (button.id === 'f0') {
-        console.log(222)
         current_frame = ''
         frame_uri = ''
-        console.log(current_frame)
+        // console.log(current_frame)
     }
-})
-}
-
+})};
 </script>
 {% endblock %}

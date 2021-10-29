@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 def capture(request):
     if request.method == 'POST':
-        print(request.POST)
+        # print(request.POST)
         if request.POST.get('photo_captured'):
             photo=Photo()
             photo.photo_edited= request.POST.get('photo_edited')
@@ -28,8 +28,8 @@ def show(request, id):
 
 def editor(request, id):
     if request.method == 'POST':
-        print(request.POST)
-        print(id)
+        # print(request.POST)
+        # print(id)
         if request.POST.get('photo_edited'):
             photo = Photo.objects.get(pk=id)
             emojis = Emoji.objects.all()
@@ -56,17 +56,17 @@ def check_admin(user):
 def add_frames(request):
     if request.method == "POST":
         if request.POST.get('frame_added'):
-            print(request.POST)
+            # print(request.POST)
             image = request.POST.get('frame_added')
             frame=Frame()
             frame.frame= request.POST.get('frame_added')
             frame.save()      
             id = frame.pk
-            print(image, id)
+            # print(image, id)
             return render(request, 'add_frame.html', {"id": id})
         return render(request, 'add_frame.html', )
     if request.method == "GET":
-        print("Get")
+        # print("Get")
         return render(request, 'add_frame.html', )
 
 @login_required
@@ -74,16 +74,16 @@ def add_frames(request):
 def add_images(request):
     if request.method == "POST":
         if request.POST.get('emoji_added'):
-            print(request.POST)
+            # print(request.POST)
             image = request.POST.get('emoji_added')
             emoji=Emoji()
             emoji.emoji= request.POST.get('emoji_added')
             emoji.save()      
             id = emoji.pk
-            print(image, id)
+            # print(image, id)
             return render(request, 'add_emoji.html', {"id": id})
         return render(request, 'add_emoji.html', )
     if request.method == "GET":
-        print("Get")
+        # print("Get")
         return render(request, 'add_emoji.html', )
 
