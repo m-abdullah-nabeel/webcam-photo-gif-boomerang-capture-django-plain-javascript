@@ -6,22 +6,26 @@
         <canvas id="myCanvas"></canvas>
     </div>
     <div class="flexrow">
-        {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
-    </div>
-    <div class="flexrow">
         <div class="upper_btn">
             <button id='undo' class="" onclick="undo_action()">Undo</button>
             <button id="redo" onclick="redo_action()">Redo</button>    
         </div>
     </div>
     <div class="flexrow">
-        <form action="" method="post">
-            {% csrf_token %}
-            <input id="photo_edited" type="hidden" name="photo_edited" value="">
-            <input class="button_input upper_btn" type="submit" value="Save Your Photo">
-        </form>
-        <a href="" class="" onclick="download_image()" id="download">DOWNLOAD</a>    
+        <div class="upper_btn">
+            {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
+            <a href="" class="" onclick="download_image()" id="download">DOWNLOAD</a>
+        </div>
     </div>
+    <div class="flexrow">
+        <div class="upper_btn">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input id="photo_edited" type="hidden" name="photo_edited" value="">
+                <input class="button_input upper_btn" type="submit" value="Save Your Photo">
+            </form>    
+            </div>
+      </div>
     <div class="flexrow">
         <div class="upper_btn">
             <button id=s0 class="sticker">Clear Sticker!</button>

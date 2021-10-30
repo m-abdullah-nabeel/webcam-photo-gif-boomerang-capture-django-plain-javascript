@@ -7,13 +7,13 @@
     </div>
     
     <div class="flexrow">
-        <a href="{% url 'editor' id=photo.id %}" class="">EDIT</a>
-        <a href="" onclick="download_image()" id="download" class="">DOWNLOAD</a>    
+        <div class="upper_btn">
+            <a href="{% url 'editor' id=photo.id %}" class="">EDIT</a>
+            <a href="" onclick="download_image()" id="download" class="">DOWNLOAD</a>    
+            {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
+        </div>
     </div>
 
-    <div class="flexrow">
-        {% post_to_facebook object_or_url "Post to Facebook!" "btn btn-primary" %}
-    </div>
 </div>
 
 <script>

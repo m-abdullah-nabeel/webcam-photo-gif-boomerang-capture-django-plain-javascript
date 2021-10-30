@@ -8,21 +8,39 @@
   </div>
 
   <div class="buttons">
-    <button id="start-camera" class="menu_button">Take Picture</button>
-    <button id="start-record" class="menu_button">GIF</button>
-    <button id="start-boomerang" class="menu_button">Boomerang</button>
-    <a href="{% url 'capture' %}">Re Choose</a>
+    <div class="flexrow">
+      <div class="upper_btn">
+        <button id="start-camera" class="menu_button">Take Picture</button>
+        <button id="start-record" class="menu_button">GIF</button>
+        <button id="start-boomerang" class="menu_button">Boomerang</button>
+        <a href="{% url 'capture' %}">Re Choose</a>  
+      </div>
+    </div>
 
-    <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
-    <button id="download-video" class="gif_btn">Download GIF</button>
-    <button id="retake-video" class="gif_btn">Retake GIF</button>
+    <div class="flexrow">
+      <div class="upper_btn">
+        <button id="download-video" class="gif_btn">Download GIF</button>
+        <button id="retake-video" class="gif_btn">Retake GIF</button>
+      </div>
+    </div>
 
-    <form action = "" method = "POST" class="pic_btn">
-      {% csrf_token %}
-      <input id="photo_captured" type="hidden" name="photo_captured" value="">
-      <input id="photo_edited" type="hidden" name="photo_edited" value="">
-      <input class="button_input" type="submit" value="Save Your Photo">
-    </form>   
+    <div class="flexrow">
+      <div class="upper_btn">
+        <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
+      </div>
+    </div>
+
+    <div class="flexrow">
+      <div class="upper_btn">
+        <form action = "" method = "POST" class="pic_btn">
+          {% csrf_token %}
+          <input id="photo_captured" type="hidden" name="photo_captured" value="">
+          <input id="photo_edited" type="hidden" name="photo_edited" value="">
+          <input class="button_input" type="submit" value="Save Your Photo">
+        </form>   
+          </div>
+    </div>
+
   </div>
 
   <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
@@ -61,9 +79,7 @@
         pic_btn.forEach(show);
     });
     //gif func
-    // start_button.addEventListener('click', take_GIF);
     start_button.addEventListener('click', function () {
-        alert()
         menu_btn.forEach(hide);
         gif_btn.forEach(show);
     });
@@ -73,24 +89,23 @@
       menu_btn.forEach(hide);
       alert(3)
     });
-    
+    //click the take photo button
     click_button.addEventListener('click', function () {
-        // var img = new Image;
-        // img.src = frame_uri;
+        startCountdown(5);
         sessionStorage.setItem("imgWidth", video.offsetWidth);
         sessionStorage.setItem("imgHeight", video.offsetHeight);
         canvas.width = video.offsetWidth;
         canvas.height = video.offsetHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
-        // canvas.getContext('2d').drawImage(img, 0, 0, video.offsetWidth, video.offsetHeight);
         let image_data_url = canvas.toDataURL('image/jpeg');
         video.style.display = "none";
         click_button.style.display = "none";
         document.getElementById('photo_captured').value = image_data_url
         document.getElementById('photo_edited').value = image_data_url
     });
-
+    //click the take gif button
     function take_GIF() {
+      startCountdown(5);
       navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false,
@@ -126,26 +141,19 @@
       });
     }
 
-    // function removeClasses(one) {
-    //   one.classList.remove('selected')
-    // }
-
-    // const buttons = document.querySelectorAll(".frame")
-    // for (const button of buttons) {
-    // button.addEventListener('click', function(event) {
-    //     buttons.forEach(removeClasses);
-    //     button.classList.add("selected")
-    //     if (button.id != 'f0') {
-    //         current_frame = button.id;
-    //         frame_uri = button.src;
-    //         // console.log(current_frame)
-    //     }
-    //     else if (button.id === 'f0') {
-    //         current_frame = '';
-    //         frame_uri = '';
-    //         // console.log(current_frame)
-    //     }
-    // })};
+    //timer
+    function startCountdown(seconds) {
+        let counter = seconds;          
+        const interval = setInterval(() => {
+            console.log(counter);
+            counter--;
+              
+            if (counter < 0 ) {
+              clearInterval(interval);
+              console.log('Ding!');
+            }
+        }, 1000);
+    }
 
 </script>
 
