@@ -79,7 +79,11 @@ button, .button_input{
         position: relative;
     }
 }
-
+#screen-gif{
+    width: 100%;
+    border: 2px solid black;
+    margin: auto;
+}
 /* selected sticker or frames */
 .selected{
     border: 5px solid blue;
@@ -94,11 +98,15 @@ button, .button_input{
     position: relative;
     margin: auto;
 }
-video, canvas{
+video, canvas, #screen-gif{
     width: 100%;
-  }
-
+}
 video {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#screen-gif {
     position: absolute;
     top: 0;
     left: 0;

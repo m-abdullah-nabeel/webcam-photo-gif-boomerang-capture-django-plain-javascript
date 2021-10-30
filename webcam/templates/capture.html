@@ -14,6 +14,8 @@
     <a href="{% url 'capture' %}">Re Choose</a>
 
     <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
+    <button id="download-video" class="gif_btn">Download GIF</button>
+    <button id="retake-video" class="gif_btn">Retake GIF</button>
 
     <form action = "" method = "POST" class="pic_btn">
       {% csrf_token %}
@@ -26,107 +28,125 @@
   <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
 
 <script>
-let camera_button = document.querySelector("#start-camera");
-let video = document.querySelector("#video");
-let screen_gif = document.querySelector("#screen-gif");
-let screen = document.querySelector(".screen");
-let click_button = document.querySelector("#click-photo");
-let canvas = document.querySelector("#canvas");
-let start_button = document.querySelector("#start-record");
-let start_boomerang = document.querySelector("#start-boomerang");
-let download_link = document.querySelector("#download-video");
-let gif_btn = document.querySelectorAll(".gif_buttons");
-let pic_btn = document.querySelectorAll(".pic_btn")
-let menu_btn = document.querySelectorAll(".menu_button");
-let capture_type1;
-let camera_stream = null;
-let media_recorder = null;
-let blobs_recorded = [];
-let frame_uri = '';
-let current_frame = '';
-const hide = n => n.style.display = "none";
-const show = n => n.style.display = "block";
-gif_btn.forEach(hide);
-pic_btn.forEach(hide);
-screen_gif.style.display = "null";
-camera_button.addEventListener('click', async function() {
-   	camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-	  video.srcObject = camera_stream;
-    menu_btn.forEach(hide);
-    pic_btn.forEach(show);
-});
+    let camera_button = document.querySelector("#start-camera");
+    let video = document.querySelector("#video");
+    let screen_gif = document.querySelector("#screen-gif");
+    let screen = document.querySelector(".screen");
+    let click_button = document.querySelector("#click-photo");
+    let canvas = document.querySelector("#canvas");
+    let start_button = document.querySelector("#start-record");
+    let retake_video = document.querySelector("#retake-video");
+    let start_boomerang = document.querySelector("#start-boomerang");
+    let download_link = document.querySelector("#download-video");
+    let gif_btn = document.querySelectorAll(".gif_btn");
+    let pic_btn = document.querySelectorAll(".pic_btn")
+    let menu_btn = document.querySelectorAll(".menu_button");
+    let capture_type1;
+    let camera_stream = null;
+    let media_recorder = null;
+    let blobs_recorded = [];
+    let frame_uri = '';
+    let current_frame = '';
+    const hide = n => n.style.display = "none";
+    const show = n => n.style.display = "block";
+    gif_btn.forEach(hide);
+    pic_btn.forEach(hide);
+    screen_gif.style.display = "null";
 
-start_boomerang.addEventListener('click', function () {
-  menu_btn.forEach(hide);
-})
-start_button.addEventListener('click', testing)
-click_button.addEventListener('click', function () {
-    var img = new Image;
-    img.src = frame_uri;
-    sessionStorage.setItem("imgWidth", video.offsetWidth);
-    sessionStorage.setItem("imgHeight", video.offsetHeight);
-    document.cookie = `imgWidth=${video.offsetWidth}, expires=Thu, 01 Jan 1970 00:00:00 UTC;`
-    document.cookie = `imgHeight:${video.offsetHeight}, expires=Thu, 01 Jan 1970 00:00:00 UTC;`
-    canvas.width = video.offsetWidth;
-    canvas.height = video.offsetHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
-    canvas.getContext('2d').drawImage(img, 0, 0, video.offsetWidth, video.offsetHeight);
-   	let image_data_url = canvas.toDataURL('image/jpeg');
-    video.style.display = "none";
-    click_button.style.display = "none";
-    document.getElementById('photo_captured').value = image_data_url
-    document.getElementById('photo_edited').value = image_data_url
-});
+    //pic func
+    camera_button.addEventListener('click', async function() {
+        camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = camera_stream;
+        menu_btn.forEach(hide);
+        pic_btn.forEach(show);
+    });
+    //gif func
+    // start_button.addEventListener('click', take_GIF);
+    start_button.addEventListener('click', function () {
+        alert()
+        menu_btn.forEach(hide);
+        gif_btn.forEach(show);
+    });
+    retake_video.addEventListener('click', take_GIF);
+    //boomerang func
+    start_boomerang.addEventListener('click', function () {
+      menu_btn.forEach(hide);
+      alert(3)
+    });
+    
+    click_button.addEventListener('click', function () {
+        // var img = new Image;
+        // img.src = frame_uri;
+        sessionStorage.setItem("imgWidth", video.offsetWidth);
+        sessionStorage.setItem("imgHeight", video.offsetHeight);
+        canvas.width = video.offsetWidth;
+        canvas.height = video.offsetHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
+        // canvas.getContext('2d').drawImage(img, 0, 0, video.offsetWidth, video.offsetHeight);
+        let image_data_url = canvas.toDataURL('image/jpeg');
+        video.style.display = "none";
+        click_button.style.display = "none";
+        document.getElementById('photo_captured').value = image_data_url
+        document.getElementById('photo_edited').value = image_data_url
+    });
 
-function testing() {
-  menu_btn.forEach(hide);
-  gif_btn.forEach(show);
-  navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: false,
-  }).then(async function(stream) {
-      let recorder = RecordRTC(stream, {
-          type: 'gif',
-          recorderType: GifRecorder,
-      });
-      recorder.startRecording();
-      const sleep = m => new Promise(r => setTimeout(r, m));
-      canvas.style.display = "none";
-      start_button.disabled = true;
-      await sleep(3000);
-      start_button.disabled = false;
-      recorder.stopRecording(function() {
-      });
-      download_link.addEventListener('click', function () {
-        let blob = recorder.getBlob();
-        invokeSaveAsDialog(blob);        
-      });
-      recorder.getDataURL(function(dataURL) { 
-          screen_gif.src = dataURL;
-      });
-      screen_gif.style.display = "block";
-  });
-}
+    function take_GIF() {
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      }).then(async function(stream) {
+          let recorder = RecordRTC(stream, {
+              type: 'gif',
+              recorderType: GifRecorder,
+          });
+          video.srcObject = stream;
+          canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
+          recorder.startRecording();
+          const sleep = m => new Promise(r => setTimeout(r, m));
+          retake_video.disabled = true;
+          download_link.disabled = true;
+          await sleep(3000);
+          recorder.stopRecording(function() {
+              canvas.style.display = "none";
+              video.style.display = "none";
+              retake_video.disabled = false;
+              download_link.disabled = false;
+          });
 
-function removeClasses(one) {
-  one.classList.remove('selected')
-}
-const buttons = document.querySelectorAll(".frame")
-for (const button of buttons) {
-button.addEventListener('click', function(event) {
-    buttons.forEach(removeClasses);
-    button.classList.add("selected")
-    if (button.id != 'f0') {
-        current_frame = button.id;
-        frame_uri = button.src;
-        // console.log(current_frame)
+          download_link.addEventListener('click', function () {
+            let blob = recorder.getBlob();
+            invokeSaveAsDialog(blob);        
+          });
+
+          recorder.getDataURL(function(dataURL) { 
+              screen_gif.src = dataURL;
+          });
+
+          screen_gif.style.display = "block";
+      });
     }
-    else if (button.id === 'f0') {
-        current_frame = '';
-        frame_uri = '';
-        // console.log(current_frame)
-    }
-})};
+
+    // function removeClasses(one) {
+    //   one.classList.remove('selected')
+    // }
+
+    // const buttons = document.querySelectorAll(".frame")
+    // for (const button of buttons) {
+    // button.addEventListener('click', function(event) {
+    //     buttons.forEach(removeClasses);
+    //     button.classList.add("selected")
+    //     if (button.id != 'f0') {
+    //         current_frame = button.id;
+    //         frame_uri = button.src;
+    //         // console.log(current_frame)
+    //     }
+    //     else if (button.id === 'f0') {
+    //         current_frame = '';
+    //         frame_uri = '';
+    //         // console.log(current_frame)
+    //     }
+    // })};
+
 </script>
 
 {% endblock %}
