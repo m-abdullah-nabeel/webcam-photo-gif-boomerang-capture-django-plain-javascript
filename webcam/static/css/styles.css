@@ -33,7 +33,19 @@ a {
     text-decoration: none;
     display: inline-block;
 }
-button, .button_input {
+.centered{
+    margin: auto;
+}
+.upper_btn{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
+}
+.stickers_list, .frames_list{
+    border: 2px solid black;
+}
+button, .button_input{
     background-color: #008CBA;
     /* background-color: #4CAF50; Green */
     border: none;
@@ -54,6 +66,7 @@ button, .button_input {
     margin: 2rem;
 }
 .flexrow{
+    margin: auto;
     max-width: 300px;
 }
 /* responsive */

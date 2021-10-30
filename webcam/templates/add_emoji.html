@@ -21,13 +21,13 @@
 
   reader.addEventListener("load", function () {
     preview.src = reader.result;
-    alert(reader.result);
+    // alert(reader.result);
     emoji_added.value = reader.result;
   }, false);
 
   if (file) {
     var dat_img = reader.readAsDataURL(file);
-    alert(dat_img);
+    // alert(dat_img);
     emoji_added.value = dat_img;
   }
 }

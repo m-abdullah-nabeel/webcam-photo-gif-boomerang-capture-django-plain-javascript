@@ -8,12 +8,10 @@
   </div>
 
   <div class="buttons">
-    <button id="start-camera" class="btn btn-primary menu_button">Take Picture</button>
+    <button id="start-camera" class="menu_button">Take Picture</button>
     <button id="start-record" class="menu_button">GIF</button>
     <button id="start-boomerang" class="menu_button">Boomerang</button>
-    <button id="re-choose" class="btn btn-primary">
-      <a href="{% url 'capture' %}">Re Choose</a>
-    </button>
+    <a href="{% url 'capture' %}">Re Choose</a>
 
     <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
 
@@ -102,7 +100,7 @@ function testing() {
       download_link.addEventListener('click', function () {
         let blob = recorder.getBlob();
         invokeSaveAsDialog(blob);        
-      })
+      });
       recorder.getDataURL(function(dataURL) { 
           screen_gif.src = dataURL;
       });
@@ -130,4 +128,5 @@ button.addEventListener('click', function(event) {
     }
 })};
 </script>
+
 {% endblock %}

@@ -22,13 +22,13 @@
 
   reader.addEventListener("load", function () {
     preview.src = reader.result;
-    alert(reader.result);
+    // alert(reader.result);
     frame_added.value = reader.result;
   }, false);
 
   if (file) {
     var dat_img = reader.readAsDataURL(file);
-    alert(dat_img);
+    // alert(dat_img);
     frame_added.value = dat_img;
   }
 }

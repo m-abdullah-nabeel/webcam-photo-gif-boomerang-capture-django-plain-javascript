@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <script src="{% static 'js/script.js' %}"></script> -->
+    
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
     <title>My pHOTOS App!</title>
 </head>
@@ -15,9 +16,9 @@
             {% if request.user.is_superuser %}
             <a href="{% url 'add_images' %}">Add New Stickers</a>
             <a href="{% url 'add_frames' %}">Add New Frames</a>
+            <a href="{% url 'ListOnes' %}">All your Photos</a>
             {% endif %}
             <a href="{% url 'capture' %}">Capture New Photo</a>
-            <a href="{% url 'ListOnes' %}">All your Photos</a>
         </nav>
         {% block body %}
         {% endblock %}  
