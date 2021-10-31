@@ -16,6 +16,10 @@ def capture(request):
             photo.save()
             id = photo.pk
             return redirect(show, id=id,)
+        else:
+            frames = Frame.objects.all()
+            context = {'frames': frames,}
+            return render(request,'capture.html', context)
     else:
         frames = Frame.objects.all()
         context = {'frames': frames,}
@@ -41,7 +45,6 @@ def editor(request, id):
             emojis = Emoji.objects.all()
             photo = Photo.objects.get(pk=id)
             context = {'photo': photo, 'emojis': emojis, 'frames': frames}
-            messages.add_message(request, messages.INFO, '{0} logged out.'.format(request.user))
             return render(request,'editor.html', context)
     else:
         frames = Frame.objects.all()
