@@ -3,8 +3,9 @@
 {% block body %}
 
 {% if request.user.is_superuser %}
-
-<input type="file" onchange="previewFile()"><br>
+<label for="">Select New Frame
+  <input type="file" onchange="previewFile()"><br>
+</label>
 <form action = "" method = "POST" id="picToDataUrl" class="pic_btn">
     {% csrf_token %}
     <input id="frame_added" type="hidden" name="frame_added" value="">

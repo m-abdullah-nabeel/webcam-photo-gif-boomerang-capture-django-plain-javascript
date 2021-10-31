@@ -140,4 +140,12 @@ video, canvas, #screen-gif{
     width: 100%;
 }
 
-
+label, input[type=submit]{
+    margin: .5em;
+    padding: 10px;
+    background: rgb(14, 5, 5); 
+    display: table;
+    color: #fff;
+}
+input[type="file"] {
+}
