@@ -55,7 +55,7 @@ def editor(request, id):
 
 def ListOnes(request):
     context ={}
-    context["dataset"] = Photo.objects.all().order_by('pk')[:]
+    context["dataset"] = Photo.objects.all().order_by('-pk')[:]
     return render(request, 'test.html', context)
 
 def check_admin(user):

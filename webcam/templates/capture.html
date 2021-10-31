@@ -18,8 +18,8 @@
     </div>
 
     <div class="responsive_btns">
-        <button id="download-video" class="gif_btn">Download GIF</button>
-        <button id="retake-video" class="gif_btn">Retake GIF</button>
+      <button id="retake-video" class="gif_btn">Capture GIF</button>
+      <button id="download-video" class="gif_btn">Download GIF</button>
         <a href="{% url 'capture' %}" class="gif_btn">Re Choose</a>
     </div>
 
@@ -62,7 +62,8 @@
     const show = n => n.style.display = "block";
     gif_btn.forEach(hide);
     pic_btn.forEach(hide);
-    screen_gif.style.display = "null";
+    screen_gif.style.display = "none";
+    canvas.style.display = "none";
 
     //pic func
     camera_button.addEventListener('click', async function() {
@@ -85,6 +86,7 @@
     //click the take photo button
     click_button.addEventListener('click', function () {
         startCountdown(5);
+        canvas.style.display = "block";
         sessionStorage.setItem("imgWidth", video.offsetWidth);
         sessionStorage.setItem("imgHeight", video.offsetHeight);
         canvas.width = video.offsetWidth;
@@ -132,6 +134,7 @@
           });
 
           screen_gif.style.display = "block";
+          retake_video.innerHTML = "Capture GIF again!"
       });
     }
     //timer
