@@ -29,11 +29,19 @@ def show(request, id):
 def editor(request, id):
     if request.method == 'POST':
         if request.POST.get('photo_edited'):
-            photo = Photo.objects.get(pk=id)
             emojis = Emoji.objects.all()
+            frames = Frame.objects.all()
+            photo = Photo.objects.get(pk=id)
             photo.photo_edited= request.POST.get('photo_edited')
             photo.save()
-            context = {'photo': photo, 'emojis': emojis, }
+            context = {'photo': photo, 'emojis': emojis, 'frames': frames}
+            return render(request,'editor.html', context)
+        else:
+            frames = Frame.objects.all()
+            emojis = Emoji.objects.all()
+            photo = Photo.objects.get(pk=id)
+            context = {'photo': photo, 'emojis': emojis, 'frames': frames}
+            messages.add_message(request, messages.INFO, '{0} logged out.'.format(request.user))
             return render(request,'editor.html', context)
     else:
         frames = Frame.objects.all()

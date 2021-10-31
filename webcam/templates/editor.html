@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% load social_share %}
 {% block body %}
-<div>
+<div class="innerContainer">
     <div class="screen">
         <canvas id="myCanvas"></canvas>
     </div>
@@ -25,7 +25,7 @@
                 <input class="button_input upper_btn" type="submit" value="Save Your Photo">
             </form>    
             </div>
-      </div>
+        </div>
     <div class="flexrow">
         <div class="upper_btn">
             <button id=s0 class="sticker">Clear Sticker!</button>
@@ -70,7 +70,6 @@
         if (current_version == 0) {
             alert("No previous activity exists")
         }
-        // else if (current_version <= head_version) {
         else {
             current_version = current_version - 1
             control_version = current_version
@@ -80,8 +79,6 @@
             img.src = image_co_data_version;
             c.getContext('2d').clearRect(0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"));
             draw_image(ctx, image_co_data_version, 0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"))
-            
-            // c.getContext('2d').drawImage(img, 0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"));
             document.getElementById('photo_edited').value = image_co_data_version;
             
             console.log("YOu are at ", control_version, " of ", head_version)
@@ -101,8 +98,6 @@
             img.src = image_co_data_version;
             c.getContext('2d').clearRect(0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"));
             draw_image(ctx, image_co_data_version, 0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"))
-            
-            // c.getContext('2d').drawImage(img, 0, 0, sessionStorage.getItem("imgWidth"), sessionStorage.getItem("imgHeight"));
             document.getElementById('photo_edited').value = image_co_data_version;
 
             console.log("YOu are at ", control_version, " of ", head_version)
@@ -169,8 +164,7 @@
             emoji_uri = '';
             console.log(current_sticker);
         }
-    })
-    };
+    })};
     const frames = document.querySelectorAll(".frame")
     for (const f of frames) {
     f.addEventListener('click', function(event) {
@@ -195,6 +189,7 @@
         current_version = change.length;
         head_version = change.length;
         console.log(current_version, control_version, head_version);
+
         document.getElementById('photo_edited').value = image_co_data;
     });
 </script>

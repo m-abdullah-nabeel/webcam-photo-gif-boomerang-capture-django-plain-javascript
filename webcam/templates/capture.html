@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block body %}
+<div class="innerContainer">
   <div class="screen">
     <video id="video" autoplay></video>
     <canvas id="canvas"></canvas> 
@@ -8,44 +9,36 @@
   </div>
 
   <div class="buttons">
-    <div class="flexrow">
-      <div class="upper_btn">
+    <div class="responsive_btns">
         <button id="start-camera" class="menu_button">Take Picture</button>
         <button id="start-record" class="menu_button">GIF</button>
         <button id="start-boomerang" class="menu_button">Boomerang</button>
-        <a href="{% url 'capture' %}">Re Choose</a>  
-      </div>
+        <!-- <a href="{% url 'capture' %}">Re Choose</a> -->
+        <a href="{% url 'capture' %}" class="menu_button">Re Choose</a>  
     </div>
 
-    <div class="flexrow">
-      <div class="upper_btn">
+    <div class="responsive_btns">
         <button id="download-video" class="gif_btn">Download GIF</button>
         <button id="retake-video" class="gif_btn">Retake GIF</button>
-      </div>
+        <a href="{% url 'capture' %}" class="gif_btn">Re Choose</a>
     </div>
 
-    <div class="flexrow">
-      <div class="upper_btn">
-        <button id="click-photo" class="btn btn-outline-primary pic_btn">Click Photo</button>
-      </div>
-    </div>
-
-    <div class="flexrow">
-      <div class="upper_btn">
+    <div class="responsive_btns">
+        <button id="click-photo" class="pic_btn">Click Photo</button>
+        <a href="{% url 'capture' %}" class="pic_btn">Re Choose</a>
         <form action = "" method = "POST" class="pic_btn">
           {% csrf_token %}
           <input id="photo_captured" type="hidden" name="photo_captured" value="">
           <input id="photo_edited" type="hidden" name="photo_edited" value="">
           <input class="button_input" type="submit" value="Save Your Photo">
-        </form>   
-          </div>
+        </form>
     </div>
 
   </div>
 
   <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
 
-<script>
+  <script>
     let camera_button = document.querySelector("#start-camera");
     let video = document.querySelector("#video");
     let screen_gif = document.querySelector("#screen-gif");
@@ -118,6 +111,7 @@
           canvas.getContext('2d').drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight);
           recorder.startRecording();
           const sleep = m => new Promise(r => setTimeout(r, m));
+          video.style.display = "block";
           retake_video.disabled = true;
           download_link.disabled = true;
           await sleep(3000);
@@ -140,7 +134,6 @@
           screen_gif.style.display = "block";
       });
     }
-
     //timer
     function startCountdown(seconds) {
         let counter = seconds;          
@@ -154,7 +147,6 @@
             }
         }, 1000);
     }
-
-</script>
-
+  </script>
+</div>
 {% endblock %}
